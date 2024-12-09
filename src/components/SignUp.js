@@ -1,163 +1,165 @@
 import React, { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import './App.css'; // Optional CSS if needed
 
-const SignUp = () => {
+function App() {
+  return (
+    <div className="flex flex-col min-h-screen bg-dark-blue text-gray-200">
+      <Header />
+      <MainContent />
+      <Footer />
+    </div>
+  );
+}
+
+const Header = () => (
+  <header className="bg-blue-800 text-white py-4 text-center shadow-md">
+    <h1 className="text-3xl font-bold">Student Sign-Up</h1>
+  </header>
+);
+
+const Footer = () => (
+  <footer className="bg-blue-900 text-gray-300 py-4 text-center mt-auto shadow-inner">
+    <p>&copy; 2024 Your Organization Name. All Rights Reserved.</p>
+  </footer>
+);
+
+const MainContent = () => {
   const [formData, setFormData] = useState({
-    studentName: '',
-    photo: '',
-    surname: '',
+    fullName: '',
+    photo: null,
     gender: '',
-    studentPhone: '',
-    studentEmail: '',
+    phone: '',
+    email: '',
     branch: '',
-    div: '',
-    fathersName: '',
-    mothersName: '',
+    division: '',
+    fatherName: '',
+    motherName: '',
     parentEmail: '',
     parentPhone: '',
-    admissionYear: '',
+    yearOfAdmission: '',
     address: '',
     pincode: '',
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files ? files[0] : value,
+    });
   };
 
-  const validateForm = () => {
-    const mandatoryFields = [
-      'studentName',
-      'surname',
-      'gender',
-      'studentPhone',
-      'studentEmail',
-      'branch',
-      'div',
-      'fathersName',
-      'mothersName',
-      'parentPhone',
-      'admissionYear',
-      'address',
-      'pincode',
-    ];
-
-    for (const field of mandatoryFields) {
-      if (!formData[field]) {
-        toast.error(`Please fill out the ${field} field.`);
-        return false;
-      }
-    }
-    return true;
-  };
-
-  const handleSubmit = () => {
-    if (validateForm()) {
-      // Mock API call for registration
-      toast.success('Account created successfully!');
-      setTimeout(() => {
-        window.location.href = '/login'; // Redirect to login page
-      }, 2000);
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    alert('Form submitted successfully!');
   };
 
   return (
-    <div className="signup-container">
-      <h1>Sign Up</h1>
-      <form>
-        <input
-          type="text"
-          name="studentName"
-          placeholder="Student Name"
-          onChange={handleInputChange}
-        />
-        <input
-          type="file"
-          name="photo"
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="surname"
-          placeholder="Surname"
-          onChange={handleInputChange}
-        />
-        <select name="gender" onChange={handleInputChange}>
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
-        <input
-          type="text"
-          name="studentPhone"
-          placeholder="Student Phone"
-          onChange={handleInputChange}
-        />
-        <input
-          type="email"
-          name="studentEmail"
-          placeholder="Student Email"
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="branch"
-          placeholder="Branch"
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="div"
-          placeholder="Division"
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="fathersName"
-          placeholder="Father's Name"
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="mothersName"
-          placeholder="Mother's Name"
-          onChange={handleInputChange}
-        />
-        <input
-          type="email"
-          name="parentEmail"
-          placeholder="Parent Email (Optional)"
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="parentPhone"
-          placeholder="Parent Phone"
-          onChange={handleInputChange}
-        />
-        <input
-          type="number"
-          name="admissionYear"
-          placeholder="Year of Admission"
-          onChange={handleInputChange}
-        />
-        <textarea
-          name="address"
-          placeholder="House Address"
-          onChange={handleInputChange}
-        ></textarea>
-        <input
-          type="number"
-          name="pincode"
-          placeholder="Pincode"
-          onChange={handleInputChange}
-        />
+    <main className="flex-grow p-6 bg-blue-950">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-blue-800 p-6 rounded shadow-lg max-w-lg mx-auto text-white"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up Form</h2>
+        <div className="space-y-5">
+          <InputField label="Full Name" name="fullName" value={formData.fullName} handleChange={handleChange} />
+          <FileField label="Photo" name="photo" handleChange={handleChange} />
+          <SelectField
+            label="Gender"
+            name="gender"
+            value={formData.gender}
+            options={['Male', 'Female', 'Other']}
+            handleChange={handleChange}
+          />
+          <InputField label="Phone Number" name="phone" value={formData.phone} handleChange={handleChange} type="tel" />
+          <InputField label="Email" name="email" value={formData.email} handleChange={handleChange} type="email" />
+          <InputField label="Branch" name="branch" value={formData.branch} handleChange={handleChange} />
+          <InputField label="Division" name="division" value={formData.division} handleChange={handleChange} />
+          <InputField label="Father's Name" name="fatherName" value={formData.fatherName} handleChange={handleChange} />
+          <InputField label="Mother's Name" name="motherName" value={formData.motherName} handleChange={handleChange} />
+          <InputField
+            label="Parent Email (Optional)"
+            name="parentEmail"
+            value={formData.parentEmail}
+            handleChange={handleChange}
+            type="email"
+          />
+          <InputField label="Parent Phone Number" name="parentPhone" value={formData.parentPhone} handleChange={handleChange} type="tel" />
+          <InputField label="Year of Admission" name="yearOfAdmission" value={formData.yearOfAdmission} handleChange={handleChange} type="number" />
+          <TextareaField label="Address" name="address" value={formData.address} handleChange={handleChange} />
+          <InputField label="Pincode" name="pincode" value={formData.pincode} handleChange={handleChange} />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-600 text-white font-bold mt-6 py-2 px-4 rounded w-full hover:bg-blue-700 transition"
+        >
+          Submit
+        </button>
       </form>
-      <button onClick={handleSubmit}>Register</button>
-      <ToastContainer />
-    </div>
+    </main>
   );
 };
 
-export default SignUp;
+const InputField = ({ label, name, value, handleChange, type = 'text' }) => (
+  <div>
+    <label className="block font-semibold mb-2">{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={handleChange}
+      className="w-full border border-gray-600 rounded p-2 bg-blue-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+      required
+    />
+  </div>
+);
+
+const FileField = ({ label, name, handleChange }) => (
+  <div>
+    <label className="block font-semibold mb-2">{label}</label>
+    <input
+      type="file"
+      name={name}
+      onChange={handleChange}
+      className="w-full border border-gray-600 rounded p-2 bg-blue-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+      accept="image/*"
+    />
+  </div>
+);
+
+const SelectField = ({ label, name, value, options, handleChange }) => (
+  <div>
+    <label className="block font-semibold mb-2">{label}</label>
+    <select
+      name={name}
+      value={value}
+      onChange={handleChange}
+      className="w-full border border-gray-600 rounded p-2 bg-blue-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+      required
+    >
+      <option value="">Select {label}</option>
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+);
+
+const TextareaField = ({ label, name, value, handleChange }) => (
+  <div>
+    <label className="block font-semibold mb-2">{label}</label>
+    <textarea
+      name={name}
+      value={value}
+      onChange={handleChange}
+      className="w-full border border-gray-600 rounded p-2 bg-blue-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+      rows="3"
+      required
+    />
+  </div>
+);
+
+export default App;
